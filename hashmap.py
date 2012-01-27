@@ -14,6 +14,11 @@ class HashMap(Mapping):
     >>> hm[1]
     2
 
+    >>> hm[3]
+    Traceback (most recent call last):
+        ...
+    KeyError: 'No such key: 3'
+
     >>> hm['hello'] = 'world'
     >>> hm._array
     [None, (1, 2), None, None, None, ('hello', 'world'), None, None]
@@ -21,6 +26,20 @@ class HashMap(Mapping):
     >>> h = HashMap([(1, 2), ('hello', 'world')])
     >>> h._array
     [None, (1, 2), None, None, None, ('hello', 'world'), None, None]
+
+    >>> h[8] = 3
+    >>> h[8]
+    3
+    >>> h[1]
+    2
+    >>> h._array
+    [(8, 3), (1, 2), None, None, None, ('hello', 'world'), None, None]
+
+    >>> del h[1]
+    >>> h[8]
+    3
+    >>> h._array
+    [(8, 3), True, None, None, None, ('hello', 'world'), None, None]
 
     '''
     def __init__(self, mapping=[]):
