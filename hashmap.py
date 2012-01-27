@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 
 class HashMap(object):
-    '''
+    '''For educational purposes. Similar to CPython's dict in design.
 
+    Tests
     >>> hm = HashMap()
     >>> hm[1] = 2
     >>> hm._array
