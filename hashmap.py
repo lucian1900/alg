@@ -1,25 +1,27 @@
 #!/usr/bin/env python
 
-class HashMap(object):
+from collections import Mapping
+
+class HashMap(Mapping):
     '''For educational purposes. Similar to CPython's dict in design.
 
     Tests
     >>> hm = HashMap()
     >>> hm[1] = 2
     >>> hm._array
-    [0, (1, 2), 0, 0, 0, 0, 0, 0]
-    
+    [None, (1, 2), None, None, None, None, None, None]
+
     >>> hm[1]
     2
 
     >>> hm['hello'] = 'world'
     >>> hm._array
-    [0, (1, 2), 0, 0, 0, ('hello', 'world'), 0, 0]
-    
+    [None, (1, 2), None, None, None, ('hello', 'world'), None, None]
+
     >>> h = HashMap([(1, 2), ('hello', 'world')])
     >>> h._array
-    [0, (1, 2), 0, 0, 0, ('hello', 'world'), 0, 0]
-    
+    [None, (1, 2), None, None, None, ('hello', 'world'), None, None]
+
     '''
     def __init__(self, mapping=[]):
         self._length = 8
@@ -35,7 +37,7 @@ class HashMap(object):
 
         for k, v in mapping:
             self[k] = v
-    
+
     def items(self):
         mapping = []
         for i in self._array:
@@ -50,6 +52,12 @@ class HashMap(object):
 
     def __setitem__(self, key, value):
         self._array[self._find(key)] = (key, value)
+
+    def __iter__(self):
+        return iter(self._array)
+
+    def __len__(self):
+        return len(self._array)
 
 if __name__ == '__main__':
     import doctest
