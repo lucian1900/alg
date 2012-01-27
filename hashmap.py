@@ -21,13 +21,26 @@ class HashMap(object):
     [0, (1, 2), 0, 0, 0, ('hello', 'world'), 0, 0]
     
     '''
-    def __init__(self, pairs=[], size=8):
-        self._length = size
-        self._array = [0] * self._length
+    def __init__(self, mapping=[]):
+        self._length = 8
+        self._array = [None] * self._length
 
-        for k, v in pairs:
+        self.update(mapping)
+
+    def update(self, mapping):
+        try:
+            mapping = mapping.items()
+        except AttributeError:
+            pass
+
+        for k, v in mapping:
             self[k] = v
     
+    def items(self):
+        mapping = []
+        for i in self._array:
+            if i: mapping.append(i)
+
     def _find(self, key):
         return hash(key) % self._length
 
