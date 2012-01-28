@@ -2,6 +2,8 @@
 
 def test(sort):
     arrays = [
+        [],
+        [1],
         [10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
         [1, 6, 3, 4, 5, 2, 7, 8, 9, 10],
         [5, 2, 9, 6, 10, 4, 3, 1, 8, 7],
@@ -35,7 +37,37 @@ def bubble(array):
         if no_swap:
             return array
 
-def quicksort(array):
+
+def selection(array):
+    '''Naive selection.
+
+    >>> test(selection)
+    True
+    '''
+    for i, e in enumerate(array):
+        min_val = e
+        min_pos = i
+
+        for j in range(i, len(array)):
+            if array[j] < min_val:
+                min_val = array[j]
+                min_pos = j
+
+        swap(array, i, min_pos)
+
+    return array
+
+
+def insertion(array):
+    '''Naive insertion.
+
+    >>> test(insertion)
+    True
+    '''
+    return array
+
+
+def quick(array):
     '''Naive recursive version. Middle is chosen as pivot
 
     >>> test(quicksort)
@@ -57,7 +89,7 @@ def quicksort(array):
         else:
             more.append(i)
 
-    return quicksort(less) + [pivot] + quicksort(more)
+    return quick(less) + [pivot] + quick(more)
 
 
 def partition(array, left, right, pivotIndex):
@@ -75,7 +107,7 @@ def partition(array, left, right, pivotIndex):
 
     return pivotIndex
 
-def quicksort_inplace(array, left=0, right=None):
+def quick_inplace(array, left=0, right=None):
     '''In place (no copies/concats). Uses partition function.
 
     #>>> test(quicksort_inplace)
@@ -87,11 +119,11 @@ def quicksort_inplace(array, left=0, right=None):
     pivotIndex = (left + right) / 2
     pivotIndex = partition(array, left, right, pivotIndex)
 
-    quicksort_inplace(array, left, pivotIndex - 1)
-    quicksort_inplace(array, pivotIndex + 1, right)
+    quick_inplace(array, left, pivotIndex - 1)
+    quick_inplace(array, pivotIndex + 1, right)
 
 
-def mergesort_bottomup(array, chunked=False):
+def merge_bottomup(array, chunked=False):
     '''Naive mergesort
 
     >>> test(mergesort_bottomup)
@@ -138,12 +170,9 @@ def mergesort_bottomup(array, chunked=False):
 
         array = [merged] + array
 
-    mergesort_bottomup(array, chunked=True)
+    merge_bottomup(array, chunked=True)
 
-def insertion(array):
-    pass
-
-def timsort(array):
+def tim(array):
     pass
 
 if __name__ == '__main__':
