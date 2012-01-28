@@ -55,10 +55,12 @@ class HashMap(Mapping):
         self.update(mapping)
 
     def _resize(self, powers=2):
+        items = self.items()
+
         self._pow2 += powers
         self._length = 2 ** self._pow2
+        self._size = 0
 
-        items = self.items()
         self._array = [None] ** self._length
 
         self.update(items)
@@ -74,8 +76,12 @@ class HashMap(Mapping):
 
     def items(self):
         mapping = []
-        for i in self._array:
-            if i: mapping.append(i)
+
+        for item in self._array:
+            if isinstance(item, tuple):
+                mapping.append(item)
+
+        return mapping
 
     def __getitem__(self, key):
         h = hash(key)
@@ -102,7 +108,11 @@ class HashMap(Mapping):
                 self._array[index] = (key, value)
                 self._size += 1
                 break
-            #TODO handle overwrites
+            elif isinstance(item, tuple):
+                k, v = self._array[index]
+                if key == k:
+                    self._array[index] = (key, value)
+                    break
 
             h >>= self._pow2
             h += 1
@@ -117,6 +127,7 @@ class HashMap(Mapping):
                 k, v = item
                 if k == key:
                     self._array[index] = True #dummy value
+                    self._size -= 1
                     return
 
             h >>= self._pow2
