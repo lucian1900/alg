@@ -41,13 +41,27 @@ class HashMap(Mapping):
     >>> h._array
     [(8, 3), True, None, None, None, ('hello', 'world'), None, None]
 
+    >>> list(iter(h))
+    [3, 'world']
+
     '''
     def __init__(self, mapping=[]):
         self._pow2 = 3
         self._length = 2 ** self._pow2
+        self._size = 0 # no elements yet
+
         self._array = [None] * self._length
 
         self.update(mapping)
+
+    def _resize(self, powers=2):
+        self._pow2 += powers
+        self._length = 2 ** self._pow2
+
+        items = self.items()
+        self._array = [None] ** self._length
+
+        self.update(items)
 
     def update(self, mapping):
         try:
@@ -86,7 +100,9 @@ class HashMap(Mapping):
 
             if not item:
                 self._array[index] = (key, value)
+                self._size += 1
                 break
+            #TODO handle overwrites
 
             h >>= self._pow2
             h += 1
@@ -107,10 +123,13 @@ class HashMap(Mapping):
             h += 1
 
     def __iter__(self):
-        return iter(self._array)
+        for item in self._array:
+            if isinstance(item, tuple):
+                k, v = item
+                yield v
 
     def __len__(self):
-        return len(self._array)
+        return self._size
 
 if __name__ == '__main__':
     import doctest
