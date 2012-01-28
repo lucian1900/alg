@@ -64,13 +64,19 @@ def insertion(array):
     >>> test(insertion)
     True
     '''
+    for i, e in enumerate(array):
+        j = i
+        while j > 0 and e < array[j-1]:
+            swap(array, j, j-1)
+            j -= 1
+
     return array
 
 
 def quick(array):
     '''Naive recursive version. Middle is chosen as pivot
 
-    >>> test(quicksort)
+    >>> test(quick)
     True
 
     '''
@@ -126,7 +132,7 @@ def quick_inplace(array, left=0, right=None):
 def merge_bottomup(array, chunked=False):
     '''Naive mergesort
 
-    >>> test(mergesort_bottomup)
+    >>> test(merge_bottomup)
     True
     '''
 
