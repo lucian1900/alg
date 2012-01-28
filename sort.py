@@ -129,54 +129,45 @@ def quick_inplace(array, left=0, right=None):
     quick_inplace(array, pivotIndex + 1, right)
 
 
-def merge_bottomup(array, chunked=False):
-    '''Naive mergesort
+def merge(left, right):
+    '''Merge sorted lists
+    >>> l1 = [1, 2, 4]
+    >>> l2 = [3, 5]
+    >>> merge(l1, l2)
+    [1, 2, 3, 4, 5]
+    '''
+    result = []
 
-    >>> test(merge_bottomup)
+    i, j = 0, 0
+    while i < len(left) and j < len(right):
+        if left[i] < right[j]:
+            result.append(left[i])
+            i += 1
+        else:
+            result.append(right[j])
+            j += 1
+
+    # copy possible remainder
+    result += left[i:]
+    result += right[j:]
+
+    return result
+
+def mergesort(array):
+    '''Naive mergesort, top to bottom
+    >>> test(mergesort)
     True
     '''
-
-    if not chunked:
-        # wrap each element in a list
-        array = [[e] for e in array]
-
     if len(array) <= 1:
-        if len(array) == 1:
-            # unwrap
-            array = array[0]
-
         return array
 
-    while True:
-        try:
-            left = iterator.next()
-        except StopIteration:
-            break
+    mid = len(array) / 2
 
-        try: # for odd length arrays
-            right = iterator.next()
-        except StopIteration:
-            right = []
+    left = mergesort(array[:mid])
+    right = mergesort(array[mid:])
 
-        merged = []
-        while len(left) != 0 and len(right) != 0:
-            if len(left) > 0:
-                l = left[0]
-                left = left[1:]
-            else:
-                l = None # less than anything
+    return merge(left, right)
 
-            if len(right) > 0:
-                r = right[0]
-                right = right[1:]
-            else:
-                r = None
-
-            merged.append(min(l, r))
-
-        array = [merged] + array
-
-    merge_bottomup(array, chunked=True)
 
 def tim(array):
     pass
