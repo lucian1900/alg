@@ -1,14 +1,18 @@
 #!/usr/bin/env python
 
+sorted_array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 arrays = [
+    [10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
     [1, 6, 3, 4, 5, 2, 7, 8, 9, 10],
+    [5, 2, 9, 6, 10, 4, 3, 1, 8, 7],
+    [2, 10, 4, 6, 3, 8, 1, 5, 7, 9],
 ]
 
 def quicksort(array):
     '''
-    >>> quicksort(arrays[0])
-    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-
+    >>> for i in arrays:
+    ...     if quicksort(i) != sorted_array:
+    ...         print False
     '''
 
     if len(array) <= 1:
