@@ -35,14 +35,25 @@ class HashMap(Mapping):
     >>> h._array
     [(8, 3), (1, 2), None, None, None, ('hello', 'world'), None, None]
 
+    >>> len(h)
+    3
+
     >>> del h[1]
     >>> h[8]
     3
+
+    >>> len(h)
+    2
+
+    >>> h[8] = 5
+    >>> h[8]
+    5
+
     >>> h._array
-    [(8, 3), True, None, None, None, ('hello', 'world'), None, None]
+    [(8, 5), True, None, None, None, ('hello', 'world'), None, None]
 
     >>> list(iter(h))
-    [3, 'world']
+    [5, 'world']
 
     '''
     def __init__(self, mapping=[]):
