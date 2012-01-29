@@ -12,6 +12,9 @@ class Heap(object):
     >>> Heap([1, 2, 3]).get_children(0)
     (1, 2)
 
+    >>> Heap([1, 3, 2]).get_children(0)
+    (2, 1)
+
     >>> Heap([1, 2, 3]).get_children(1)
     ()
 
@@ -24,7 +27,7 @@ class Heap(object):
     >>> Heap([5, 2, 1, 7, 4, 3, -2])._array
     [-2, 4, 1, 7, 5, 3, 2]
 
-    >>> #list(Heap([5, 2, 1, 7, 4, 3, -2]))
+    >>> list(Heap([5, 2, 1, 7, 4, 3, -2]))
     [-2, 1, 2, 3, 4, 5, 7]
     '''
 
@@ -53,6 +56,7 @@ class Heap(object):
 
         result = self._array[0]
         if len(self._array) == 1:
+            self._array.pop()
             return result
 
         self._array[0] = self._array.pop()
@@ -67,6 +71,8 @@ class Heap(object):
             if self._array[smallest] < self._array[i]:
                 self.swap(i, smallest)
                 i = smallest
+            else:
+                break
 
         return result
 
@@ -94,7 +100,7 @@ class Heap(object):
     def __iter__(self):
         h = Heap(self._array)
 
-        while True:
+        while len(h._array) > 0:
             yield h.pop()
 
 
