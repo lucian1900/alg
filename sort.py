@@ -173,40 +173,6 @@ def tim(array):
     pass
 
 
-def heap(array):
-    '''
-    >>> #test(heap)
-    True
-    '''
-    h = []
-    for e in array:
-        h.append(e)
-        i = len(h) - 1
-        while i > 0:
-            parent = (i-1) / 2
-            if h[i] < h[parent]:
-                swap(h, i, parent)
-            else:
-                break
-
-    array = []
-
-    while len(h) > 0:
-        array.append(h[0])
-        h[0] = h.pop()
-
-        i = 0
-        while i < len(h):
-            left, right = 2 * i + 1, 2 * i + 2
-            if h[i] < h[left] and h[i] < h[right]:
-                break
-            elif h[left] < h[right]:
-                swap(h, left, i)
-            else:
-                swap(h, right, i)
-
-    return array
-
 if __name__ == '__main__':
     import doctest
     doctest.testmod()
