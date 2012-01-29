@@ -24,12 +24,15 @@ def dijkstra(graph, start, end):
     not_seen = set(range(len(graph)))
     previous = {start: None}
 
+    node = start
     while len(not_seen) > 0 and node != end:
-        # find smallest cost seen node
+        # find smallest cost node
         node = end
         for i in not_seen:
-            if graph[i] < graph[node]:
+            if dist[i] < dist[node]:
                 node = i
+
+        not_seen.remove(node)
 
         edges = graph[node]
         # update dist
@@ -39,14 +42,14 @@ def dijkstra(graph, start, end):
                 dist[i] = alt
                 previous[i] = node
 
-        not_seen.remove(node)
-
     # walk back to find the path
     path = [end]
     node = end
     while node != None:
         path.append(previous[node])
         node = previous[node]
+    path.pop()
+    path.reverse()
 
     return dist[end], path
 
