@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+from __future__ import division
 from collections import Mapping
 
 class HashMap(Mapping):
@@ -55,11 +56,23 @@ class HashMap(Mapping):
     >>> list(iter(h))
     [5, 'world']
 
-    >>> h._grow()
+    >>> len(h)
+    2
+
+    >>> h._size
+    2
+    >>> h._length
+    8
+    >>> h.update({'a': 1, 'b': 2, 'c': 3, 'd': 4, 'e': 5, 'f': 6, 'g': 7})
     >>> h._length
     32
-    >>> h.items()
-    [(8, 5), ('hello', 'world')]
+
+    >>> h._length
+    32
+    >>> h._grow()
+    >>> h._length
+    128
+
     '''
     def __init__(self, mapping=[]):
         self._pow2 = 3
@@ -116,11 +129,14 @@ class HashMap(Mapping):
                     return v
 
             h >>= self._pow2 # remove used bits
-            h += 1 # touch the entire array
+            h += 1 # linear probing after expending all bits
 
         raise KeyError("No such key: {}".format(key))
 
     def __setitem__(self, key, value):
+        if self._size / self._length > 2 / 3:
+            self._grow()
+
         h = hash(key)
         for i in xrange(self._length):
             index = h % self._length
