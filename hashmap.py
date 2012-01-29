@@ -55,24 +55,35 @@ class HashMap(Mapping):
     >>> list(iter(h))
     [5, 'world']
 
+    >>> h._grow()
+    >>> h._length
+    32
+    >>> h.items()
+    [(8, 5), ('hello', 'world')]
     '''
     def __init__(self, mapping=[]):
         self._pow2 = 3
-        self._length = 2 ** self._pow2
         self._size = 0 # no elements yet
 
         self._array = [None] * self._length
 
         self.update(mapping)
 
-    def _resize(self, powers=2):
+    @property
+    def _length(self):
+        return 2 ** self._pow2
+
+    def _grow(self):
         items = self.items()
 
-        self._pow2 += powers
-        self._length = 2 ** self._pow2
-        self._size = 0
+        # if small, grow quicker
+        if self._pow2 < 7:
+            self._pow2 += 2
+        else:
+            self._pow2 += 1
 
-        self._array = [None] ** self._length
+        self._size = 0
+        self._array = [None] * self._length
 
         self.update(items)
 
@@ -104,7 +115,7 @@ class HashMap(Mapping):
                 if k == key:
                     return v
 
-            h >>= self._pow2
+            h >>= self._pow2 # remove used bits
             h += 1 # touch the entire array
 
         raise KeyError("No such key: {}".format(key))
