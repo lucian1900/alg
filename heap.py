@@ -21,6 +21,9 @@ class Heap(object):
     >>> h = Heap(); h.push(1); h.pop()
     1
 
+    >>> Heap([5, 2, 1, 7, 4, 3, -2])._array
+    [-2, 4, 1, 7, 5, 3, 2]
+
     >>> #list(Heap([5, 2, 1, 7, 4, 3, -2]))
     [-2, 1, 2, 3, 4, 5, 7]
     '''
@@ -56,11 +59,10 @@ class Heap(object):
 
         i = 0
         while i < len(self._array):
-            children = self.get_children(i)
-
-            if len(children) == 0:
+            try:
+                smallest = self.get_children(i)[0]
+            except IndexError:
                 break
-            smallest = children[0]
 
             if self._array[smallest] < self._array[i]:
                 self.swap(i, smallest)
