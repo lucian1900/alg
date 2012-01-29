@@ -15,7 +15,7 @@ class Heap(object):
     >>> h = Heap(); h.push(1); h.pop()
     1
 
-    >>> #list(Heap([5, 2, 1, 7, 4, 3, -2]))
+    >>> list(Heap([5, 2, 1, 7, 4, 3, -2]))
     [-2, 1, 2, 3, 4, 5, 7]
     '''
 
@@ -57,8 +57,8 @@ class Heap(object):
             smallest = children[0]
 
             if self._array[smallest] < self._array[i]:
-                self.swap(i, c)
-                i = c
+                self.swap(i, smallest)
+                i = smallest
 
         return result
 
