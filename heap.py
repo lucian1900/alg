@@ -9,18 +9,6 @@ class Heap(object):
 
     def push(self, item):
         self._array.append(item)
-        self.percolate_up()
-
-    def pop(self):
-        result = self._array[0]
-        self.sift_down()
-        return result
-
-    def swap(self, a, b):
-        self._array[a], self._array[b] = self._array[b], self._array[a]
-
-    def percolate_up(self):
-        'Bubble value up as far as possible without breaking the heap'
         i = len(self._array) - 1
 
         while i != 0:
@@ -32,8 +20,9 @@ class Heap(object):
             else:
                 break
 
-    def sift_down(self):
-        'Replace root with bottom right element and fix the heap'
+    def pop(self):
+        result = self._array[0]
+
         self._array[0] = self._array.pop()
 
         i = 0
@@ -50,6 +39,12 @@ class Heap(object):
             else:
                 self.swap(i, ri)
 
+
+        return result
+
+    def swap(self, a, b):
+        self._array[a], self._array[b] = self._array[b], self._array[a]
+
     def get_parent(self, i):
         return (i - 1) // 2
 
@@ -57,8 +52,10 @@ class Heap(object):
         return 2 * i + 1, 2 * i + 2
 
     def __iter__(self):
+        array = self._array[:]
         while len(self._array) > 0:
             yield self.pop()
+        self._array = array
 
 
 if __name__ == '__main__':
