@@ -3,19 +3,25 @@
 class Heap(object):
     '''
 
-    >>> h = Heap(); h.get_children(0)
+    >>> Heap().get_children(0)
     ()
 
-    >>> h = Heap(); h.push(1); h.get_children(0)
+    >>> Heap([1]).get_children(0)
     ()
 
-    >>> h = Heap([1, 2, 3]); h.get_children(0)
+    >>> Heap([1, 2, 3]).get_children(0)
     (1, 2)
+
+    >>> Heap([1, 2, 3]).get_children(1)
+    ()
+
+    >>> Heap([1, 2, 3, 4, 5]).get_children(1)
+    (3, 4)
 
     >>> h = Heap(); h.push(1); h.pop()
     1
 
-    >>> list(Heap([5, 2, 1, 7, 4, 3, -2]))
+    >>> #list(Heap([5, 2, 1, 7, 4, 3, -2]))
     [-2, 1, 2, 3, 4, 5, 7]
     '''
 
