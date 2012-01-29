@@ -15,7 +15,6 @@ nodes = [
 
 def dijkstra(graph, start, end):
     '''
-
     >>> dijkstra(nodes, 1, 7)
     (4, [1, 4, 7])
     '''
@@ -28,6 +27,7 @@ def dijkstra(graph, start, end):
     while len(not_seen) > 0 and node != end:
         # find smallest cost node
         node = end
+
         for i in not_seen:
             if dist[i] < dist[node]:
                 node = i
