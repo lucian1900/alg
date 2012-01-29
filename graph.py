@@ -19,32 +19,36 @@ def dijkstra(graph, start, end):
     >>> dijkstra(nodes, 1, 7)
     (4, [1, 4, 7])
     '''
-    path = [start]
-    costs = [float('inf')] * len(graph)
-    costs[start] = 0
-    seen = set([start])
+    dist = [float('inf')] * len(graph)
+    dist[start] = 0
+    not_seen = set(range(len(graph)))
+    previous = {start: None}
 
-    node = start
-    while node != end:
+    while len(not_seen) > 0 and node != end:
+        # find smallest cost seen node
+        node = end
+        for i in not_seen:
+            if graph[i] < graph[node]:
+                node = i
+
         edges = graph[node]
-
-        smallest = end
+        # update dist
         for i in edges.keys():
-            if i in seen:
-                continue
+            alt = dist[node] + edges[i]
+            if alt < dist[i]:
+                dist[i] = alt
+                previous[i] = node
 
-            if edges[i] < costs[i]:
-                costs[i] = edges[i]
-                if edges[i] <= costs[smallest]:
-                    smallest = i
+        not_seen.remove(node)
 
-        node = smallest
-        seen.add(node)
-        path.append(node)
+    # walk back to find the path
+    path = [end]
+    node = end
+    while node != None:
+        path.append(previous[node])
+        node = previous[node]
 
-    print 'costs', costs, 'seen', seen
-
-    return costs[end], path
+    return dist[end], path
 
 if __name__ == '__main__':
     import doctest
