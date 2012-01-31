@@ -1,10 +1,9 @@
 #!/usr/bin/env python
 
 class Node(object):
-    def __init__(self, value, left=None, right=None):
+    def __init__(self, value, *children):
         self.value = value
-        self.left = left
-        self.right = right
+        self.children = children
 
     def __repr__(self, level=0):
         '''Pretty-printing
@@ -14,18 +13,19 @@ class Node(object):
           2,
           3)
         '''
-        if isinstance(self.left, Node):
-            left = self.left.__repr__(level=level+1)
-        else:
-            left = repr(self.left)
+        indent = '  ' * level
 
-        if isinstance(self.right, Node):
-            right = self.right.__repr__(level=level+1)
-        else:
-            right = repr(self.right)
+        result = indent + 'Node({},'.format(self.value)
 
-        return '{3}Node({0},\n{3}  {1},\n{3}  {2})'.format(
-            self.value, left, right, level * '  ')
+        for i in self.children:
+            try:
+                c = i.__repr__(level = level + 1)
+            except TypeError:
+                c = indent + '  ' + repr(i)
+
+            result += indent + '\n  {}'.format(c)
+
+        return result + ')'
 
 if __name__ == '__main__':
     import doctest
