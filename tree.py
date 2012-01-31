@@ -5,6 +5,34 @@ class Node(object):
         self.value = value
         self.children = children
 
+    def _check_binary(self):
+        if len(self.children) != 2:
+            raise ValueError('node is not binary')
+
+    @property
+    def left(self):
+        self._check_binary()
+
+        return self.children[0]
+
+    @left.setter
+    def left(self, value):
+        self._check_binary()
+
+        self.children[0] = value
+
+    @property
+    def right(self):
+        self._check_binary()
+
+        return self.children[1]
+
+    @right.setter
+    def right(self, value):
+        self._check_binary()
+
+        self.children[0] = value
+
     def __repr__(self, level=0):
         '''Pretty-printing
 
@@ -17,13 +45,15 @@ class Node(object):
 
         result = indent + 'Node({},'.format(self.value)
 
-        for i in self.children:
+        for i, c in enumerate(self.children):
             try:
-                c = i.__repr__(level = level + 1)
+                rep = c.__repr__(level = level + 1)
             except TypeError:
-                c = indent + '  ' + repr(i)
+                rep = indent + '  ' + repr(c)
 
-            result += indent + '\n{}'.format(c)
+            result += indent + '\n{}'.format(rep)
+            if i != len(self.children) - 1:
+                result += ','
 
         return result + ')'
 
