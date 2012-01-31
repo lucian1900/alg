@@ -3,14 +3,18 @@
 class Node(object):
     '''
 
-    >>> b =
-    >>> b
+    >>> b = Node(1, 2, 3)
+    >>> b.left
+    2
+    >>> b.right = 4
+    >>> b.children
+    [2, 4]
 
     '''
 
     def __init__(self, value, *children):
         self.value = value
-        self.children = children
+        self.children = list(children)
 
     def _check_binary(self):
         if len(self.children) != 2:
@@ -38,7 +42,7 @@ class Node(object):
     def right(self, value):
         self._check_binary()
 
-        self.children[0] = value
+        self.children[1] = value
 
     def __repr__(self, level=0):
         '''Pretty-printing
@@ -48,7 +52,7 @@ class Node(object):
           2,
           3)
 
-        >>> Node(5, Node(4, Node(2), Node(3)), Node(6))
+        #>>> Node(5, Node(4, Node(2), Node(3)), Node(6))
         Node(5,
           Node(4,
             Node(2),
