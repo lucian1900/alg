@@ -23,7 +23,7 @@ class Node(object):
             except TypeError:
                 c = indent + '  ' + repr(i)
 
-            result += indent + '\n  {}'.format(c)
+            result += indent + '\n{}'.format(c)
 
         return result + ')'
 
