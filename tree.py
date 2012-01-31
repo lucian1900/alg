@@ -1,6 +1,13 @@
 #!/usr/bin/env python
 
 class Node(object):
+    '''
+
+    >>> b =
+    >>> b
+
+    '''
+
     def __init__(self, value, *children):
         self.value = value
         self.children = children
@@ -40,10 +47,19 @@ class Node(object):
         Node(1,
           2,
           3)
+
+        >>> Node(5, Node(4, Node(2), Node(3)), Node(6))
+        Node(5,
+          Node(4,
+            Node(2),
+            Node(3)),
+          Node(6))
         '''
         indent = '  ' * level
 
-        result = indent + 'Node({},'.format(self.value)
+        result = indent + 'Node({}'.format(self.value)
+        if len(self.children) > 0:
+            result += ','
 
         for i, c in enumerate(self.children):
             try:
