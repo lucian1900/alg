@@ -73,7 +73,7 @@ class Node(object):
 
 
 class BNode(Node):
-    '''Binary tree node
+    '''Binary search tree node
 
     >>> BNode(1, 2, 3).left
     2
@@ -94,6 +94,14 @@ class BNode(Node):
     @right.setter
     def right(self, value):
         self.children[1] = value
+
+    def find(self, value):
+        if self.value == value:
+            return self
+
+
+    def insert(self, value):
+        pass
 
     def rotateLeft(self):
         '''
@@ -126,6 +134,10 @@ class BNode(Node):
 
         left.right = self
         return left
+
+
+class AVLNode(BNode):
+    pass
 
 if __name__ == '__main__':
     import doctest
