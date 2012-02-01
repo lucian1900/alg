@@ -44,6 +44,25 @@ class Node(object):
 
         self.children[1] = value
 
+    def __eq__(self, other):
+        '''
+        >>> Node(1, 2, 3) == Node(1, 2, 3)
+        True
+        >>> Node(1, 2, 3) != Node(1, 2, 3)
+        False
+
+        '''
+        if self is other:
+            return true
+
+        if self.value != other.value:
+            return false
+
+        return self.children == other.children
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
     def __repr__(self, level=0):
         '''Pretty-printing
 
@@ -58,7 +77,6 @@ class Node(object):
             Node(2),
             Node(3)),
           Node(6))
-
 
         '''
         indent = '  ' * level
@@ -82,12 +100,8 @@ class Node(object):
     def rotateLeft(self):
         '''
         >>> n = Node('P', 'A', Node('Q', 'B', 'C'))
-        >>> n.rotateLeft()
-        Node('Q',
-          Node('P',
-            'A',
-            'B'),
-          'C')
+        >>> n.rotateLeft() == Node('Q', Node('P', 'A', 'B'), 'C')
+        True
 
         '''
         if not isinstance(self.right, Node):
@@ -102,12 +116,8 @@ class Node(object):
     def rotateRight(self):
         '''
         >>> n = Node('Q', Node('P', 'A', 'B'), 'C')
-        >>> n.rotateRight()
-        Node('P',
-          'A',
-          Node('Q',
-            'B',
-            'C'))
+        >>> n.rotateRight() == Node('P', 'A', Node('Q', 'B', 'C'))
+        True
 
         '''
         if not isinstance(self.left, Node):
