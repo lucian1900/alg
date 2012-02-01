@@ -79,6 +79,10 @@ class BNode(Node):
     2
     '''
 
+    def __init__(self, value, left=None, right=None):
+        self.value = value
+        self.children = [left, right]
+
     @property
     def left(self):
         return self.children[0]
@@ -98,6 +102,14 @@ class BNode(Node):
     def find(self, value):
         if self.value == value:
             return self
+
+        for i in self.children:
+            if isinstance(i, BNode):
+                if i.find(value) == value:
+                    return i
+            else:
+                if i == value:
+                    return i
 
 
     def insert(self, value):
