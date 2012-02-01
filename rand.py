@@ -7,13 +7,17 @@ m = 7
 def lcg(n):
     '''
     >>> lcg(1)
+    6
 
     >>> lcg(3)
+    0
 
     >>> lcg(5)
+    1
 
     '''
-    return (a * n + b) % 7
+    return (a * n + b) % m
 
 if __name__ == '__main__':
-    pass
+    import doctest
+    doctest.testmod()
