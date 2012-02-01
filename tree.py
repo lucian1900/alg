@@ -4,9 +4,9 @@ class Node(object):
     '''
 
     >>> b = Node(1, 2, 3)
-    >>> b.left
+    >>> b.children[0]
     2
-    >>> b.right = 4
+    >>> b.children[1] = 4
     >>> b.children
     [2, 4]
 
@@ -15,34 +15,6 @@ class Node(object):
     def __init__(self, value, *children):
         self.value = value
         self.children = list(children)
-
-    def _check_binary(self):
-        if len(self.children) != 2:
-            raise ValueError('node is not binary')
-
-    @property
-    def left(self):
-        self._check_binary()
-
-        return self.children[0]
-
-    @left.setter
-    def left(self, value):
-        self._check_binary()
-
-        self.children[0] = value
-
-    @property
-    def right(self):
-        self._check_binary()
-
-        return self.children[1]
-
-    @right.setter
-    def right(self, value):
-        self._check_binary()
-
-        self.children[1] = value
 
     def __eq__(self, other):
         '''
@@ -97,14 +69,40 @@ class Node(object):
 
         return result + ')'
 
+
+
+
+class BNode(Node):
+    '''Binary tree node
+
+    >>> BNode(1, 2, 3).left
+    2
+    '''
+
+    @property
+    def left(self):
+        return self.children[0]
+
+    @left.setter
+    def left(self, value):
+        self.children[0] = value
+
+    @property
+    def right(self):
+        return self.children[1]
+
+    @right.setter
+    def right(self, value):
+        self.children[1] = value
+
     def rotateLeft(self):
         '''
-        >>> n = Node('P', 'A', Node('Q', 'B', 'C'))
-        >>> n.rotateLeft() == Node('Q', Node('P', 'A', 'B'), 'C')
+        >>> n = BNode('P', 'A', BNode('Q', 'B', 'C'))
+        >>> n.rotateLeft() == BNode('Q', BNode('P', 'A', 'B'), 'C')
         True
 
         '''
-        if not isinstance(self.right, Node):
+        if not isinstance(self.right, BNode):
             return False
 
         right = self.right
@@ -115,12 +113,12 @@ class Node(object):
 
     def rotateRight(self):
         '''
-        >>> n = Node('Q', Node('P', 'A', 'B'), 'C')
-        >>> n.rotateRight() == Node('P', 'A', Node('Q', 'B', 'C'))
+        >>> n = BNode('Q', BNode('P', 'A', 'B'), 'C')
+        >>> n.rotateRight() == BNode('P', 'A', BNode('Q', 'B', 'C'))
         True
 
         '''
-        if not isinstance(self.left, Node):
+        if not isinstance(self.left, BNode):
             return False
 
         left = self.left
