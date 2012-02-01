@@ -58,10 +58,12 @@ class Node(object):
             Node(2),
             Node(3)),
           Node(6))
+
+
         '''
         indent = '  ' * level
 
-        result = indent + 'Node({}'.format(self.value)
+        result = indent + 'Node({}'.format(repr(self.value))
         if len(self.children) > 0:
             result += ','
 
@@ -77,6 +79,44 @@ class Node(object):
 
         return result + ')'
 
+    def rotateLeft(self):
+        if not isinstance(self.right, Node):
+            return False
+
+        right = self.right
+        self.right = right.right
+
+        self.left = right.left
+        right.left = self
+
+    def rotateRight(self):
+        '''
+        >>> n = Node('Q', Node('P', 'A', 'B'), 'C')
+        >>> n
+        Node('Q',
+          Node('P',
+            'A',
+            'B'),
+          'C')
+
+        >>> n.rotateRight()
+        Node('P',
+          'A',
+          Node('Q',
+          'B',
+          'C'))
+
+        '''
+        if not isinstance(self.left, Node):
+            return False
+
+        left = self.left
+        self.left = left.left
+
+        self.left = left.right
+
+        left.right = self
+        return left
 
 if __name__ == '__main__':
     import doctest
