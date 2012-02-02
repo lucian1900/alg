@@ -105,12 +105,10 @@ class BNode(Node):
 
         for i in self.children:
             if isinstance(i, BNode):
-                if i.find(value) == value:
-                    return i
-            else:
-                if i == value:
-                    return i
+                i = i.find(value)
 
+            if i == value:
+                return i
 
     def insert(self, value):
         pass
