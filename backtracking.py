@@ -26,10 +26,8 @@ def nqueens(queens, k=0):
 
     for i in xrange(len(queens)):
         queens[k+1] = i
-        if feasible(queens, k + 1):#queens
+        if feasible(queens, k + 1):
             return nqueens(queens, k + 1)
-
-    return False
 
 if __name__ == '__main__':
     import doctest
