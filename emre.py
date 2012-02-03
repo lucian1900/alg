@@ -17,19 +17,26 @@ def valid(email):
     True
 
     >>> valid('')
+    False
     '''
 
     pattern = re.compile('''
     ^
-    [a-zA-Z0-9_+\.]
+    ([a-zA-Z0-9_+\.\-]+
     @
-    [a-zA-Z0-9\-]
+    [a-zA-Z0-9\-]+
     \.
-    [a-zA-Z]?
+    [a-zA-Z]*)
     $
     ''', re.VERBOSE)
 
-    return pattern.match(email) or False
+    match = pattern.match(email)
+    if match == None:
+        return False
+
+    else:
+        return True
+
 
 if __name__ == '__main__':
     import doctest
