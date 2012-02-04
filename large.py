@@ -10,30 +10,43 @@ class Heap(object):
 
     def __init__(self, filename):
         if not os.path.exists(filename):
-            f = open(filename, 'wb')
-            f.write('\x00')
-            f.close()
+            with open(filename, 'wb') as f:
+                f.write('\x00')
 
         self.file = open(filename, 'r+b')
         self.map = mmap(self.file.fileno(), 0)
 
     def incr(self, key):
+        item_key = key.ljust(self.key_size)
+
+        for i, (k, c) in enumerate(self):
+            if k == key:
+                self.map.seek(i)
+                self.map.write(item_key + self.pad(c + 1))
+                return
+
         size = self.map.size()
+        if size == 1: size = 0
 
-        if size < size + self.offset:
-            self.map.resize(size + self.offset)
-
-        item = key.ljust(self.key_size) + self.pad(1)
-
-        self.map.write(item)
+        self.map.resize(size + self.offset)
+        self.map.seek(self.map.size() - self.offset)
+        self.map.write(item_key + self.pad(1))
 
     def pad(self, count):
         return repr(count).zfill(self.count_size)
 
     def __iter__(self):
+        if self.map.size() == 1:
+            return
+
         i = 0
         while i < self.map.size():
-            yield self.map[i:i+self.offset]
+            self.map.seek(i)
+            item = self.map.read(self.offset)
+            print item
+            k, c = item[:self.key_size], item[self.key_size+1: self.offset]
+            yield k.rstrip(), int(c)
+
             i += self.offset
 
 
@@ -42,7 +55,7 @@ def process(filename='/home/lucian/Prog/alg/large.in'):
     m = mmap(f.fileno(), 0, access=ACCESS_READ)
     h = Heap('/home/lucian/Prog/alg/large.out')
 
-    while m.tell() < m.size():
+    while m.tell() < 1000:#m.size():
         line = m.readline()
         key = line.split('\n')[0]
 
@@ -68,6 +81,5 @@ def gendata(filename='/home/lucian/Prog/input'):
     f.close()
 
 if __name__ == '__main__':
-    gendata()
-    #import doctest
-    #doctest.testmod()
+    #gendata()
+    process()
