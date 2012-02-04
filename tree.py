@@ -147,7 +147,14 @@ class BNode(Node):
 
 
 class AVLNode(BNode):
-    pass
+    '''AVL tree node
+
+    '''
+
+class RBNode(BNode):
+    '''Red-black tree node
+
+    '''
 
 if __name__ == '__main__':
     import doctest
