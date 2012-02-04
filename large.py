@@ -21,7 +21,7 @@ class Heap(object):
 
         for i, (k, c) in enumerate(self):
             if k == key:
-                self.map.seek(i)
+                self.map.seek(i - i)
                 self.map.write(item_key + self.pad(c + 1))
                 return
 
@@ -29,7 +29,7 @@ class Heap(object):
         if size == 1: size = 0
 
         self.map.resize(size + self.offset)
-        self.map.seek(self.map.size() - self.offset)
+        self.map.seek(size)
         self.map.write(item_key + self.pad(1))
 
     def pad(self, count):
@@ -43,7 +43,6 @@ class Heap(object):
         while i < self.map.size():
             self.map.seek(i)
             item = self.map.read(self.offset)
-            print item
             k, c = item[:self.key_size], item[self.key_size+1: self.offset]
             yield k.rstrip(), int(c)
 
