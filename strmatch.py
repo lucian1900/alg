@@ -3,8 +3,11 @@
 def hash(s):
     h = 0
     for c in s:
-        h = h + ord(c)
+        h = hash_step(h, c)
     return h
+
+def hash_step(h, c, direction=1):
+    return h + direction * ord(c)
 
 def robin_karp(pattern, string):
     '''
@@ -23,13 +26,13 @@ def robin_karp(pattern, string):
 
     for i in range(string_len - pattern_len):
         sample = string[i:pattern_len+i]
-        sample_hash += ord(sample[-1:])
+        sample_hash = hash_step(sample_hash, sample[-1:])
 
         if sample_hash == pattern_hash:
             if sample == pattern:
                 return i
 
-        sample_hash -= ord(sample[0])
+        sample_hash = hash_step(sample_hash, sample[0], direction=-1)
 
     return -1
 
