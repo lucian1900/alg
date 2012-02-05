@@ -5,6 +5,9 @@ from copy import deepcopy
 from collections import Mapping
 
 
+class RetryTransaction(Exception): pass
+
+
 class Atomic(Mapping):
     '''Transaction context manager and object space proxy
 
@@ -24,20 +27,27 @@ class Atomic(Mapping):
 
     def __init__(self, space):
         self.space = space
+        self.log = {}
 
-    def __enter__(self):
-        pass
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        pass
-
-    def __getitem__(self, key):
+        self.write_time = 0
         self.read_time = time()
 
+    def __enter__(self):
+        self.read_time = time()
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        if self.write_time >= self.read_time:
+            print 'Failing transaction'
+        else:
+            print 'Commiting'
+            self.space.update(self.log)
+            self.write_time = time()
+
+    def __getitem__(self, key):
         return deepcopy(self.space[key])
 
     def __setitem__(self, key, val):
-        self.space[key] = deepcopy(val)
+        self.log[key] = val
 
     def __len__(self):
         return len(self.space)
