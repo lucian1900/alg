@@ -6,23 +6,39 @@ from collections import Mapping
 
 
 class RetryTransaction(Exception): pass
+class DictWrapper(dict): pass
 
 
-class Atomic(Mapping):
-    '''Transaction context manager and object space proxy
+class atomic(object):
+    '''Decorator for transactions
 
-    >>> stm = Atomic({})
-    >>> stm['hello'] = [1, 2, 3]; stm['hello']
-    [1, 2, 3]
+    >>> s = Space({'a', 1})
+    >>> @atomic(s)
+    ... def foo(space):
+    ...     space['a'] += 1
+    >>> foo()
+    >>> s['a']
+    2
+    '''
+    def __init__(self, space):
+        self.space = space
 
-    >>> l = stm['hello']; l
-    [1, 2, 3]
+    def __call__(self, func):
+        def wrap(*args, **kwargs):
+            result = func(self.space, *args, **kwargs)
 
-    >>> l[0] = 5; l
-    [5, 2, 3]
+            if self.space.write_time >= self.space.read_time:
+                print 'Failing transaction'
+            else:
+                self.space.space.update(self.space.log)
+                self.space.write_time = time()
 
-    >>> stm['hello']
-    [1, 2, 3]
+        return wrap
+
+
+class Space(Mapping):
+    '''Transaction object space
+
     '''
 
     def __init__(self, space):
@@ -35,11 +51,10 @@ class Atomic(Mapping):
     def __enter__(self):
         self.read_time = time()
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def __commit__(self):
         if self.write_time >= self.read_time:
             print 'Failing transaction'
         else:
-            print 'Commiting'
             self.space.update(self.log)
             self.write_time = time()
 
