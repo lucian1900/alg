@@ -22,7 +22,7 @@ class atomic(object):
 
     >>> @atomic(s)
     ... def bar(space):
-    ...     space.a += 2
+    ...     space.a = 3
     ...     raise RetryTransaction()
     >>> foo()
     >>> s.a
@@ -34,15 +34,25 @@ class atomic(object):
     def __call__(self, func):
         @wraps(func)
         def wrap(*args, **kwargs):
-            self.space._start()
+            tries = 0
+            commited = False
+            while not commited and tries < 5:
+                self.space._begin()
 
-            try:
-                result = func(self.space, *args, **kwargs)
-            except RetryTransaction:
-                self.space._commit(retry=True)
-            else:
-                self.space._commit()
-                return result
+                try:
+                    result = func(self.space, *args, **kwargs)
+                except RetryTransaction:
+                    retry = True
+                except Exception, e:
+                    retry = True
+                else:
+                    retry = False
+
+                commited = self.space._commit(retry=retry)
+
+                tries += 1
+
+            return result
 
         return wrap
 
@@ -51,9 +61,7 @@ class atomic(object):
 
 
 class Space(object):
-    '''Transaction object space
-
-    '''
+    '''Transaction object space'''
 
     def __init__(self, **space):
         self.__dict__['_store'] = space
@@ -62,14 +70,13 @@ class Space(object):
         self.__dict__['_write_time'] = 0
         self.__dict__['_read_time'] = time()
 
-    def _start(self):
+    def _begin(self):
         self.__dict__['_read_time'] = time()
 
     def _commit(self, retry=False):
         if retry or \
                 self.__dict__['_write_time'] >= self.__dict__['_read_time']:
-            print 'Failing transaction'
-            self.__dict__['_log'] = {}
+            self.__dict__['_log'].clear()
         else:
             self.__dict__['_store'].update(self.__dict__['_log'])
             self.__dict__['_write_time'] = time()
