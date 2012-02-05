@@ -8,13 +8,17 @@ class Heap(object):
     count_size = 10
     offset = key_size + count_size
 
-    def __init__(self, filename):
-        if not os.path.exists(filename):
-            with open(filename, 'wb') as f:
-                f.write('\x00')
+    def __init__(self, filename=None):
+        if filename != None:
+            if not os.path.exists(filename):
+                with open(filename, 'wb') as f:
+                    f.write('\x00')
 
-        self.file = open(filename, 'r+b')
-        self.map = mmap(self.file.fileno(), 0)
+            self.file = open(filename, 'r+b')
+            self.map = mmap(self.file.fileno(), 0)
+
+        else:
+            self.map = mmap(-1, 0)
 
     def incr(self, key):
         item_key = key.ljust(self.key_size)
@@ -31,6 +35,8 @@ class Heap(object):
         self.map.resize(size + self.offset)
         self.map.seek(size)
         self.map.write(item_key + self.pad(1))
+
+        #todo percolateup
 
     def pad(self, count):
         return repr(count).zfill(self.count_size)
@@ -54,7 +60,7 @@ def process(filename='/home/lucian/Prog/alg/large.in'):
     m = mmap(f.fileno(), 0, access=ACCESS_READ)
     h = Heap('/home/lucian/Prog/alg/large.out')
 
-    while m.tell() < 1000:#m.size():
+    while m.tell() < 10000:#m.size():
         line = m.readline()
         key = line.split('\n')[0]
 
