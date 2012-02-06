@@ -1,10 +1,9 @@
 #!/usr/bin/env python
 
-from time import time
-from copy import deepcopy
-from functools import wraps
-from threading import Lock
-
+import time
+import threading
+import functools
+import copy
 
 class RetryTransaction(Exception): pass
 class FailedTransaction(Exception): pass
@@ -13,34 +12,50 @@ class FailedTransaction(Exception): pass
 class atomic(object):
     '''Decorator for transactions
 
-    >>> s = Store(dict(a=1))
+    Working transaction
+    >>> s = Store(a=1)
     >>> @atomic(s)
-    ... def foo(space):
+    ... def inc(space):
     ...     space.a += 1
-    ...     return 5
-    >>> foo()
-    5
+    ...     return space.a
+    >>> inc()
+    2
     >>> s['a']
     2
 
+    Failing transaction (retries too much)
     >>> @atomic(s)
-    ... def bar(space):
+    ... def fail(space):
     ...     space.a = 3
     ...     raise RetryTransaction()
-    >>> bar()
+    >>> fail()
     Traceback (most recent call last):
     ...
     FailedTransaction
     >>> s['a']
     2
-    '''
-    max_retries = 5
 
-    def __init__(self, store):
+    Transaction failure across threads
+    >>> s = Store(i=0)
+    >>> @atomic(s)
+    ... def inc(space):
+    ...     space.i += 1
+    >>> @atomic(s)
+    ... def slowinc(space):
+    ...     time.sleep(1)
+    ...     space.i += 2
+    >>> threading.Thread(target=slowinc).start()
+    >>> #inc()
+    >>> #time.sleep(2); s['i']
+    1
+    '''
+
+    def __init__(self, store, max_retries=15):
         self.space = Space(store)
+        self.max_retries = max_retries
 
     def __call__(self, func):
-        @wraps(func)
+        @functools.wraps(func)
         def wrap(*args, **kwargs):
             tries = 0
             commited = False
@@ -78,7 +93,7 @@ class Store(object):
             self._items = items
 
         self._write_time = 0
-        self._lock = Lock()
+        self._lock = threading.Lock()
 
     def __getitem__(self, key):
         return self._items[key]
@@ -88,7 +103,7 @@ class Store(object):
 
     def update(self, items):
         self._items.update(items)
-        self._write_time = time()
+        self._write_time = time.time()
 
 class Space(object):
     '''Per-transaction view of the world
@@ -106,7 +121,7 @@ class Space(object):
         self.__dict__['_log'] = {}
 
     def _begin(self):
-        self.__dict__['_read_time'] = time()
+        self.__dict__['_read_time'] = time.time()
 
     def _commit(self):
         store = self.__dict__['_store']
@@ -126,7 +141,7 @@ class Space(object):
         try:
             return self.__dict__['_log'][key]
         except KeyError:
-            return self.__dict__['_store'][key]
+            return copy.deepcopy(self.__dict__['_store'][key])
 
     def __setattr__(self, key, val):
         self.__dict__['_log'][key] = val
