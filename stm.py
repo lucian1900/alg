@@ -71,8 +71,12 @@ class Store(object):
     '''Stores names, wrapper for a dict
 
     '''
-    def __init__(self, items):
-        self._items = items
+    def __init__(self, items=None, **kwargs):
+        if kwargs:
+            self._items = kwargs
+        else:
+            self._items = items
+
         self._write_time = 0
         self._lock = Lock()
 
