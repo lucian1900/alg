@@ -7,6 +7,7 @@ from functools import wraps
 
 
 class RetryTransaction(Exception): pass
+class FailedTransaction(Exception): pass
 
 
 class atomic(object):
@@ -24,7 +25,10 @@ class atomic(object):
     ... def bar(space):
     ...     space.a = 3
     ...     raise RetryTransaction()
-    >>> foo()
+    >>> bar()
+    Traceback (most recent call last):
+    ...
+    FailedTransaction
     >>> s['a']
     2
     '''
@@ -41,13 +45,15 @@ class atomic(object):
 
                 try:
                     result = func(self.space, *args, **kwargs)
-                #except RetryTransaction:
-                except Exception, e:
+                except RetryTransaction:
                     self.space._clear()
                 else:
                     commited = self.space._commit()
 
                 tries += 1
+
+            if not commited:
+                raise FailedTransaction()
 
             return result
 
@@ -58,6 +64,10 @@ class atomic(object):
 
 
 class Store(object):
+    '''Stores names, wrapper for a dict
+
+    TODO Needs locking
+    '''
     def __init__(self, items):
         self._items = items
         self._write_time = 0
