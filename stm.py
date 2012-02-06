@@ -17,7 +17,9 @@ class atomic(object):
     >>> @atomic(s)
     ... def foo(space):
     ...     space.a += 1
+    ...     return 5
     >>> foo()
+    5
     >>> s['a']
     2
 
@@ -32,6 +34,8 @@ class atomic(object):
     >>> s['a']
     2
     '''
+    max_retries = 5
+
     def __init__(self, store):
         self.space = Space(store)
 
@@ -40,7 +44,7 @@ class atomic(object):
         def wrap(*args, **kwargs):
             tries = 0
             commited = False
-            while not commited and tries < 5:
+            while not commited and tries < self.max_retries:
                 self.space._begin()
 
                 try:
