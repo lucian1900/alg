@@ -2,8 +2,8 @@
 
 from time import time
 from copy import deepcopy
-from collections import Mapping
 from functools import wraps
+from threading import Lock
 
 
 class RetryTransaction(Exception): pass
@@ -70,11 +70,11 @@ class atomic(object):
 class Store(object):
     '''Stores names, wrapper for a dict
 
-    TODO Needs locking
     '''
     def __init__(self, items):
         self._items = items
         self._write_time = 0
+        self._lock = Lock()
 
     def __getitem__(self, key):
         return self._items[key]
@@ -107,12 +107,13 @@ class Space(object):
     def _commit(self):
         store = self.__dict__['_store']
 
-        if store._write_time >= self.__dict__['_read_time']:
-            self.__dict__['_clear']()
-            return False
-        else:
-            store.update(self.__dict__['_log'])
-            return True
+        with store._lock:
+            if store._write_time >= self.__dict__['_read_time']:
+                self.__dict__['_clear']()
+                return False
+            else:
+                store.update(self.__dict__['_log'])
+                return True
 
     def _clear(self):
         self.__dict__['_log'].clear()
