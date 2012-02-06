@@ -108,7 +108,7 @@ class Store(object):
 class Space(object):
     '''Per-transaction view of the world
 
-    >>> st = Store({'a': 1, 'b': 2})
+    >>> st = Store(a=1, b=2)
     >>> s = Space(st); s.a
     1
     >>> s.a = 3; s.a
