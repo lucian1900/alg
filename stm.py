@@ -49,6 +49,16 @@ class atomic(object):
     >>> inc()
     >>> time.sleep(1); s['i']
     1
+
+    >>> s = Store(i=0)
+    >>> @atomic(s)
+    ... def add(space, val):
+    ...     space.i += val
+    >>> threads = [threading.Thread(target=add, args=(i,)) for i in range(10)]
+    >>> for t in threads: t.start()
+    >>> for t in threads: t.join()
+    >>> s['i']
+    45
     '''
 
     def __init__(self, store, max_retries=15):
