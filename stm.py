@@ -45,8 +45,9 @@ class atomic(object):
     ...     time.sleep(1)
     ...     space.i += 2
     >>> threading.Thread(target=slowinc).start()
+    >>> time.sleep(0.5)
     >>> inc()
-    >>> time.sleep(2); s['i']
+    >>> time.sleep(1); s['i']
     1
     '''
 
