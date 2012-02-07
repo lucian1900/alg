@@ -45,8 +45,8 @@ class atomic(object):
     ...     time.sleep(1)
     ...     space.i += 2
     >>> threading.Thread(target=slowinc).start()
-    >>> #inc()
-    >>> #time.sleep(2); s['i']
+    >>> inc()
+    >>> time.sleep(2); s['i']
     1
     '''
 
@@ -82,11 +82,13 @@ class atomic(object):
         pass
 
 
-class Store(object):
+class Store(threading.local):
     '''Stores names, wrapper for a dict
 
     '''
     def __init__(self, items=None, **kwargs):
+        super(Store, self).__init__()
+
         if kwargs:
             self._items = kwargs
         else:
