@@ -51,23 +51,25 @@ class atomic(object):
     '''
 
     def __init__(self, store, max_retries=15):
-        self.space = Space(store)
+        self.store = store
         self.max_retries = max_retries
 
     def __call__(self, func):
         @functools.wraps(func)
         def wrap(*args, **kwargs):
+            space = Space(self.store)
+
             tries = 0
             commited = False
             while not commited and tries < self.max_retries:
-                self.space._begin()
+                space._begin()
 
                 try:
-                    result = func(self.space, *args, **kwargs)
+                    result = func(space, *args, **kwargs)
                 except RetryTransaction:
-                    self.space._clear()
+                    space._clear()
                 else:
-                    commited = self.space._commit()
+                    commited = space._commit()
 
                 tries += 1
 
@@ -82,13 +84,11 @@ class atomic(object):
         pass
 
 
-class Store(threading.local):
+class Store(object):
     '''Stores names, wrapper for a dict
 
     '''
     def __init__(self, items=None, **kwargs):
-        super(Store, self).__init__()
-
         if kwargs:
             self._items = kwargs
         else:
@@ -130,7 +130,7 @@ class Space(object):
 
         with store._lock:
             if store._write_time >= self.__dict__['_read_time']:
-                self.__dict__['_clear']()
+                self.__dict__['_log'].clear()
                 return False
             else:
                 store.update(self.__dict__['_log'])
