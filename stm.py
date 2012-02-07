@@ -45,9 +45,20 @@ class atomic(object):
     ...     time.sleep(1)
     ...     space.i += 2
     >>> threading.Thread(target=slowinc).start()
+    >>> time.sleep(0.5)
     >>> inc()
-    >>> time.sleep(2); s['i']
+    >>> time.sleep(1); s['i']
     1
+
+    >>> s = Store(i=0)
+    >>> @atomic(s)
+    ... def add(space, val):
+    ...     space.i += val
+    >>> threads = [threading.Thread(target=add, args=(i,)) for i in range(10)]
+    >>> for t in threads: t.start()
+    >>> for t in threads: t.join()
+    >>> s['i']
+    45
     '''
 
     def __init__(self, store, max_retries=15):
@@ -58,6 +69,7 @@ class atomic(object):
         @functools.wraps(func)
         def wrap(*args, **kwargs):
             space = Space(self.store)
+
             tries = 0
             commited = False
             while not commited and tries < self.max_retries:
@@ -129,7 +141,7 @@ class Space(object):
 
         with store._lock:
             if store._write_time >= self.__dict__['_read_time']:
-                self.__dict__['_clear']()
+                self.__dict__['_log'].clear()
                 return False
             else:
                 store.update(self.__dict__['_log'])
