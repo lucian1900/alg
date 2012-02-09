@@ -179,7 +179,10 @@ def mergesort_bottomup(array):
     array = [[i] for i in array]
 
     while len(array) > 1:
-        left = array.pop(0)
+        try:
+            left = array.pop(0)
+        except IndexError:
+            left = []
         try:
             right = array.pop(0)
         except IndexError:
