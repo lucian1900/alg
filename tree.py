@@ -147,6 +147,19 @@ class BNode(Node):
 
 
 class AVLNode(object):
+    '''Naive AVL tree implementation. Recursive functions aplenty
+    Prints itself inorder
+
+    >>> n = AVLNode(1); n
+    1
+    >>> n.insert(2); n
+    1  2
+    >>> n.insert(3); n
+    2  1  3
+    >>> n.insert(4); n.insert(5); n.insert(6); n
+    4  2    1    3  5    6
+    '''
+
     def __init__(self, data):
         self.data = data
         self.left, self.right = None, None
@@ -216,13 +229,13 @@ class AVLNode(object):
 
         self.rebalance()
 
-    def ___str___(self, indent = 0):
-        result = " " * indent + str(self.data)
+    def __repr__(self, indent = 0):
+        result = " " * indent + repr(self.data)
 
         if self.left:
-            result += self.left.__str__(indent + 2)
+            result += self.left.__repr__(indent + 2)
         if self.right:
-            result += self.right.__str__(indent + 2)
+            result += self.right.__repr__(indent + 2)
 
         return result
 
