@@ -146,15 +146,83 @@ class BNode(Node):
         return left
 
 
-class AVLNode(BNode):
-    '''AVL tree node
+class AVLNode(object):
+    def __init__(self, data):
+        self.data = data
+        self.left, self.right = None, None
 
-    '''
+    def get_balance(self):
+        left = self.left.get_height() if self.left else 0
+        right = self.right.get_height() if self.right else 0
 
-class RBNode(BNode):
-    '''Red-black tree node
+        return left - right
 
-    '''
+    def get_height(self):
+        left = self.left.get_height() if self.left else 0
+        right = self.right.get_height() if self.right else 0
+
+        return 1 + max(left, right)
+
+    def rotate_left(self):
+        self.data, self.right.data = self.right.data, self.data
+
+        old_left = self.left
+        self.left, self.right = self.right, self.right.right
+
+        self.left.left, self.left.right = old_left, self.left.left
+
+    def rotate_right(self):
+        self.data, self.left.data = self.left.data, self.data
+
+        old_right = self.right
+        self.left, self.right = self.leftl.left, self.left
+        self.right.left, self.right.left = self.right.right, old_right
+
+    def rotate_left_right(self):
+        self.left.rotate_left()
+        self.rotate_right()
+
+    def rotate_right_left(self):
+        self.right.rotate_right()
+        self.rotate_left()
+
+    def balance(self):
+        bal = self.get_balance()
+        if bal > 1:
+            if self.left.get_balance() > 0:
+                self.rotate_right()
+            else:
+                self.rotate_left_right()
+        elif bal < -1:
+            if self.right.get_balance() < 0:
+                self.rotate_left()
+            else:
+                self.rotate_right_left()
+
+
+    def insert(self, data):
+        if data <= self.data:
+            if not self.left:
+                self.left = AVLNode(data)
+            else:
+                self.left.insert(data)
+        else:
+            if not self.right:
+                self.right = AVLNode(data)
+            else:
+                self.right.insert(data)
+        self.do_balance()
+
+    def ___str___(self, indent = 0):
+        result = " " * indent + str(self.data)
+
+        if self.left:
+            result += self.left.__str__(indent + 2)
+        if self.right:
+            result += self.right.__str__(indent + 2)
+
+        return result
+
 
 if __name__ == '__main__':
     import doctest
