@@ -151,15 +151,17 @@ class AVLNode(object):
         self.data = data
         self.left, self.right = None, None
 
-    def get_balance(self):
-        left = self.left.get_height() if self.left else 0
-        right = self.right.get_height() if self.right else 0
+    @property
+    def balance(self):
+        left = self.left.height if self.left else 0
+        right = self.right.height if self.right else 0
 
         return left - right
 
-    def get_height(self):
-        left = self.left.get_height() if self.left else 0
-        right = self.right.get_height() if self.right else 0
+    @property
+    def height(self):
+        left = self.left.height if self.left else 0
+        right = self.right.height if self.right else 0
 
         return 1 + max(left, right)
 
@@ -186,15 +188,15 @@ class AVLNode(object):
         self.right.rotate_right()
         self.rotate_left()
 
-    def balance(self):
-        bal = self.get_balance()
+    def rebalance(self):
+        bal = self.balance
         if bal > 1:
-            if self.left.get_balance() > 0:
+            if self.left.balance > 0:
                 self.rotate_right()
             else:
                 self.rotate_left_right()
         elif bal < -1:
-            if self.right.get_balance() < 0:
+            if self.right.balance < 0:
                 self.rotate_left()
             else:
                 self.rotate_right_left()
@@ -211,7 +213,8 @@ class AVLNode(object):
                 self.right = AVLNode(data)
             else:
                 self.right.insert(data)
-        self.do_balance()
+
+        self.rebalance()
 
     def ___str___(self, indent = 0):
         result = " " * indent + str(self.data)
