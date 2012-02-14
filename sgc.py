@@ -44,6 +44,7 @@ class Heap(list):
         >>> h = Heap(); h.alloc(2)
         [0, 0]
         '''
+
         chunk = [0] * size
         self.extend(chunk)
         return chunk
@@ -53,13 +54,16 @@ class Heap(list):
         >>> h = Heap([1, 0, 4, 5, 1, 2, 3]); h.free(3, 2); h
         [1, 0, 4, 0, 0, 2, 3]
 
-        >>> h = Heap([1, 2]); h.free(4, 1); h
+        >>> h2 = Heap([1, 2]); h2.free(4, 1); h2
         [1, 2]
 
-        >>>
+        >>> h2.free(0, 2); h2
+        [0, 0]
         '''
+
         if offset + length <= len(self):
             self[offset:offset+length] = [0] * length
+
 
 if __name__ == '__main__':
     import doctest
