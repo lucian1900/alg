@@ -3,10 +3,14 @@
 
 class Pointer(object):
     '''
-    >>> p = Pointer(Heap(), 2, 4); p
+    >>> p = Pointer(Heap(range(10)), 2, 4); p
     4
     >>> p + 1
     6
+    >>> p.contents
+    [4, 5]
+    >>> p.contents = [-2, -3]; p.contents
+    [-2, -3]
     '''
 
     def __init__(self, heap, sizeof, offset):
@@ -54,7 +58,8 @@ class Heap(list):
 
         >>>
         '''
-        self[offset:offset+length] = [0] * length
+        if offset + length <= len(self):
+            self[offset:offset+length] = [0] * length
 
 if __name__ == '__main__':
     import doctest
