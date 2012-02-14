@@ -1,5 +1,23 @@
 #!/usr/bin/env python
 
+
+class Pointer(int):
+    '''
+    >>> p = Pointer(Heap(), 2, 4); p
+    4
+    >>> p + 1
+    6
+    '''
+
+    def __init__(self, heap, sizeof, offset):
+        super(Pointer, self).__init__(offset)
+
+        self._heap = heap
+        self._sizeof = sizeof
+
+    def __add__(self, other):
+        return Pointer(self._heap, self._sizeof, self + self._sizeof * other)
+
 class Heap(object):
     def __init__(self, initial=None):
         self._mem = initial or []
