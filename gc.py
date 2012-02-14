@@ -20,7 +20,9 @@ class Heap(object):
         [1, 0, 4, 0, 0, 2, 3]
 
         >>> h = Heap([1, 2]); h.free(4, 1); h._mem
+        [1, 2]
 
+        >>>
         '''
         self._mem[offset:offset+length] = [0] * length
 
