@@ -13,28 +13,28 @@ class Pointer(object):
     [-2, -3]
     '''
 
-    def __init__(self, heap, sizeof, offset):
+    def __init__(self, heap, size, address):
         self._heap = heap
-        self._sizeof = sizeof
-        self._offset = offset
+        self._size = size
+        self._addr = address
 
     def __int__(self):
-        return self._offset
+        return self._addr
 
     def __add__(self, other):
-        offset = int(other) * self._sizeof + self._offset
-        return Pointer(self._heap, self._sizeof, offset)
+        offset = int(other) * self._size + self._addr
+        return Pointer(self._heap, self._size, offset)
 
     def __repr__(self):
-        return repr(self._offset)
+        return repr(self._addr)
 
     @property
     def contents(self):
-        return self._heap[self._offset : self._offset+self._sizeof]
+        return self._heap[self._addr : self._addr+self._size]
 
     @contents.setter
     def contents(self, value):
-        self._heap[self._offset : self._offset+self._sizeof] = value
+        self._heap[self._addr : self._addr+self._size] = value
 
 
 class Heap(list):
