@@ -4,9 +4,9 @@
 class Pointer(object):
     '''
     >>> p = Pointer(Heap(range(10)), 2, 4); p
-    4
+    [4, 5] at 4
     >>> p + 1
-    6
+    [6, 7] at 6
     >>> p.contents
     [4, 5]
     >>> p.contents = [-2, -3]; p.contents
@@ -26,7 +26,7 @@ class Pointer(object):
         return Pointer(self._heap, self._size, offset)
 
     def __repr__(self):
-        return repr(self._addr)
+        return '{} at {}'.format(repr(self.contents), repr(self._addr))
 
     @property
     def contents(self):
@@ -42,12 +42,15 @@ class Heap(list):
         '''malloc equivalent
 
         >>> h = Heap(); h.alloc(2)
-        [0, 0]
+        [0, 0] at 0
         '''
+
+        p = Pointer(self, size, len(self))
 
         chunk = [0] * size
         self.extend(chunk)
-        return chunk
+
+        return p
 
     def free(self, offset, length):
         '''
