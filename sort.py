@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+
 def test(sort):
     arrays = [
         [],
@@ -29,7 +30,7 @@ def bubble(array):
     '''
     while True:
         no_swap = True
-        for i in range(len(array) - 1):
+        for i in xrange(len(array) - 1):
             if array[i] > array[i + 1]:
                 swap(array, i, i+1)
                 no_swap = False
@@ -66,8 +67,8 @@ def insertion(array):
     '''
     for i, e in enumerate(array):
         j = i
-        while j > 0 and e < array[j-1]:
-            swap(array, j, j-1)
+        while j > 0 and e < array[j - 1]:
+            swap(array, j, j - 1)
             j -= 1
 
     return array
@@ -84,12 +85,12 @@ def quick(array):
     if len(array) <= 1:
         return array
 
-    pivotIndex = len(array) / 2
-    pivot = array[pivotIndex]
+    pivot_index = len(array) / 2
+    pivot = array[pivot_index]
 
     less = []
     more = []
-    for i in array[:pivotIndex] + array[pivotIndex + 1:]:
+    for i in array[:pivot_index] + array[pivot_index + 1:]:
         if i < pivot:
             less.append(i)
         else:
@@ -98,20 +99,23 @@ def quick(array):
     return quick(less) + [pivot] + quick(more)
 
 
-def partition(array, left, right, pivotIndex):
-    pivot = array[pivotIndex]
+def partition(array, left, right, pivot_index):
+    pivot = array[pivot_index]
 
-    swap(array, pivotIndex, right) # move pivot to end
-    pivotIndex = left
+    # Move pivot to end
+    swap(array, pivot_index, right)
+    pivot_index = left
 
-    for i in range(left, right):
+    for i in xrange(left, right):
         if array[i] < pivot:
-            swap(array, i, pivotIndex)
-            pivotIndex += 1
+            swap(array, i, pivot_index)
+            pivot_index += 1
 
-    swap(array, pivotIndex, right) # move pivot to final position
+    # Move pivot to final position
+    swap(array, pivot_index, right)
 
-    return pivotIndex
+    return pivot_index
+
 
 def quick_inplace(array, left=0, right=None):
     '''In place (no copies/concats). Uses partition function.
@@ -122,11 +126,11 @@ def quick_inplace(array, left=0, right=None):
     if not right:
         right = len(array) - 1
 
-    pivotIndex = (left + right) / 2
-    pivotIndex = partition(array, left, right, pivotIndex)
+    pivot_index = (left + right) / 2
+    pivot_index = partition(array, left, right, pivot_index)
 
-    quick_inplace(array, left, pivotIndex - 1)
-    quick_inplace(array, pivotIndex + 1, right)
+    quick_inplace(array, left, pivot_index - 1)
+    quick_inplace(array, pivot_index + 1, right)
 
 
 def merge(left, right):
@@ -153,6 +157,7 @@ def merge(left, right):
 
     return result
 
+
 def mergesort(array):
     '''Naive mergesort, top to bottom
     >>> test(mergesort)
@@ -167,6 +172,7 @@ def mergesort(array):
     right = mergesort(array[mid:])
 
     return merge(left, right)
+
 
 def mergesort_bottomup(array):
     '''Iterative mergesort

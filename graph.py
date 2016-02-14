@@ -13,6 +13,7 @@ nodes = [
     {8: 1, 6: 3},
 ]
 
+
 def dijkstra(graph, start, end):
     '''
     >>> dijkstra(nodes, 1, 7)
@@ -45,7 +46,7 @@ def dijkstra(graph, start, end):
     # walk back to find the path
     path = [end]
     node = end
-    while node != None:
+    while node is not None:
         path.append(previous[node])
         node = previous[node]
     path.pop()

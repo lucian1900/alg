@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+
 class Node(object):
     '''
 
@@ -25,10 +26,10 @@ class Node(object):
 
         '''
         if self is other:
-            return true
+            return True
 
         if self.value != other.value:
-            return false
+            return False
 
         return self.children == other.children
 
@@ -68,8 +69,6 @@ class Node(object):
                 result += ','
 
         return result + ')'
-
-
 
 
 class BNode(Node):
@@ -214,7 +213,6 @@ class AVLNode(object):
             else:
                 self.rotate_right_left()
 
-
     def insert(self, data):
         if data <= self.data:
             if not self.left:
@@ -229,7 +227,7 @@ class AVLNode(object):
 
         self.rebalance()
 
-    def __repr__(self, indent = 0):
+    def __repr__(self, indent=0):
         result = " " * indent + repr(self.data)
 
         if self.left:
