@@ -4,7 +4,7 @@ from random import shuffle
 
 
 def bits(n):
-    return bin(n + 2**32)[-32:]
+    return bin(n + 2 ** 32)[-32:]
 
 
 def addxor(s):
@@ -17,6 +17,7 @@ def addxor(s):
 
 t = range(255)
 shuffle(t)
+
 
 def pearson(s):
     h = 0

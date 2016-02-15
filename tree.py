@@ -60,7 +60,7 @@ class Node(object):
 
         for i, c in enumerate(self.children):
             try:
-                rep = c.__repr__(level = level + 1)
+                rep = c.__repr__(level=level + 1)
             except TypeError:
                 rep = indent + '  ' + repr(c)
 

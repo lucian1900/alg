@@ -5,8 +5,13 @@ import threading
 import functools
 import copy
 
-class RetryTransaction(Exception): pass
-class FailedTransaction(Exception): pass
+
+class RetryTransaction(Exception):
+    pass
+
+
+class FailedTransaction(Exception):
+    pass
 
 
 class atomic(object):
@@ -111,12 +116,10 @@ class Store(object):
     def __getitem__(self, key):
         return self._items[key]
 
-    #def __setitem__(self, key, val):
-    #    self._items[key] = val
-
     def update(self, items):
         self._items.update(items)
         self._write_time = time.time()
+
 
 class Space(object):
     '''Per-transaction view of the world

@@ -2,6 +2,7 @@
 
 import re
 
+
 def valid(email):
     '''
     >>> valid('hello')
