@@ -1,24 +1,27 @@
 #!/usr/bin/env python
 
+
 def hash(s):
     h = 0
     for c in s:
         h += hash_step(c)
     return h
 
+
 def hash_step(c):
     return 31 * ord(c)
 
-def robin_karp(pattern, string):
+
+def rabin_karp(pattern, string):
     '''
-    >>> robin_karp('abc', 'abecedarabcsd')
+    >>> rabin_karp('abc', 'abecedarabcsd')
     8
 
-    >>> robin_karp('abc', 'abecedar')
+    >>> rabin_karp('abc', 'abecedar')
     -1
 
     '''
-    pattern_len = len(pattern) #cache
+    pattern_len = len(pattern)  # cache
     string_len = len(string)
 
     pattern_hash = hash(pattern)
