@@ -3,6 +3,7 @@
 from __future__ import division
 from collections import Mapping
 
+
 class HashMap(Mapping):
     '''For educational purposes. Similar to CPython's dict in design.
 
@@ -76,7 +77,7 @@ class HashMap(Mapping):
     '''
     def __init__(self, mapping=[]):
         self._pow2 = 3
-        self._size = 0 # no elements yet
+        self._size = 0  # no elements yet
 
         self._array = [None] * self._length
 
@@ -128,8 +129,8 @@ class HashMap(Mapping):
                 if k == key:
                     return v
 
-            h >>= self._pow2 # remove used bits
-            h += 1 # linear probing after expending all bits
+            h >>= self._pow2  # remove used bits
+            h += 1  # linear probing after expending all bits
 
         raise KeyError("No such key: {}".format(key))
 
@@ -164,7 +165,7 @@ class HashMap(Mapping):
             if isinstance(item, tuple):
                 k, v = item
                 if k == key:
-                    self._array[index] = True #dummy value
+                    self._array[index] = True  # dummy value
                     self._size -= 1
                     return
 
