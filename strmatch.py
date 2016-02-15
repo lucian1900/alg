@@ -29,7 +29,7 @@ def rabin_karp(pattern, string):
 
     for i in range(string_len - pattern_len):
         sample = string[i:pattern_len + i]
-        sample_hash += hash_step(sample[-1:])
+        sample_hash += hash_step(sample[-1])
 
         if sample_hash == pattern_hash:
             if sample == pattern:
