@@ -1,6 +1,19 @@
 #!/usr/bin/env python
 
 
+def test(matcher):
+    data = [
+        ('abc', 'abecedarabcsd', 8),
+        ('abc', 'abecedar', -1),
+    ]
+
+    for pattern, string, result in data:
+        if matcher(pattern, string) != result:
+            return False
+
+    return True
+
+
 def hash_step(c):
     return ord(c)
 
@@ -14,11 +27,8 @@ def hash_naive(s):
 
 def rabin_karp_naive(pattern, string):
     '''
-    >>> rabin_karp_naive('abc', 'abecedarabcsd')
-    8
-
-    >>> rabin_karp_naive('abc', 'abecedar')
-    -1
+    >>> test(rabin_karp_naive)
+    True
 
     '''
     pattern_len = len(pattern)  # cache
@@ -61,11 +71,8 @@ def hash_rolling(chars):
 
 def rabin_karp_rolling(pattern, string):
     '''
-    >>> rabin_karp_rolling('abc', 'abecedarabcsd')
-    8
-
-    >>> rabin_karp_rolling('abc', 'abecedar')
-    -1
+    >>> test(rabin_karp_rolling)
+    True
     '''
     pattern_len = len(pattern)  # cache
     string_len = len(string)
@@ -88,6 +95,54 @@ def rabin_karp_rolling(pattern, string):
 
     return -1
 
+
+def make_kmp_table(pattern):
+    '''
+    >>> make_kmp_table('abcdabd')
+    [-1, 0, 0, 0, 0, 1, 2]
+    '''
+    table = [-1, 0]
+    pos = 2
+    cand = 0  # Next candidate substring index
+    while pos < len(pattern):
+        # Substring continues
+        if pattern[pos - 1] == pattern[cand]:
+            table.append(cand + 1)
+            pos += 1
+            cand += 1
+
+        # But we can fall back
+        elif cand > 0:
+            cand = table[cand]
+
+        # No more candidates
+        else:
+            table.append(0)
+            pos += 1
+
+    return table
+
+
+def knuth_morris_pratt(pattern, string):
+    '''
+    >>> test(knuth_morris_pratt)
+    True
+    '''
+    table = make_kmp_table(pattern)
+    pattern_len = len(pattern)  # cache
+    string_len = len(string)
+
+    for i in range(string_len - pattern_len):
+        for j, char in enumerate(pattern):
+            if string[i + j] != char:
+                shift = table[j]
+                if shift > -1:
+                    i += table[j]
+                break
+            elif j == pattern_len - 1:
+                return i
+
+    return -1
 
 if __name__ == '__main__':
     import doctest
