@@ -158,9 +158,9 @@ def merge(left, right):
     return result
 
 
-def mergesort(array):
-    '''Naive mergesort, top to bottom
-    >>> test(mergesort)
+def mergesort_rec(array):
+    '''Naive mergesort, non-tail recursive
+    >>> test(mergesort_rec)
     True
     '''
     if len(array) <= 1:
@@ -168,15 +168,15 @@ def mergesort(array):
 
     mid = len(array) / 2
 
-    left = mergesort(array[:mid])
-    right = mergesort(array[mid:])
+    left = mergesort_rec(array[:mid])
+    right = mergesort_rec(array[mid:])
 
     return merge(left, right)
 
 
-def mergesort_bottomup(array):
+def mergesort_iter(array):
     '''Iterative mergesort
-    >>> test(mergesort_bottomup)
+    >>> test(mergesort_iter)
     True
     '''
     if len(array) == 0:

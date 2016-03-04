@@ -37,7 +37,7 @@ def rabin_karp_naive(pattern, string):
     pattern_hash = hash_naive(pattern)
     sample_hash = hash_naive(string[:pattern_len - 1])
 
-    for i in range(string_len - pattern_len):
+    for i in xrange(string_len - pattern_len):
         sample = string[i:pattern_len + i]
         sample_hash += hash_step(sample[-1])
 
@@ -81,7 +81,7 @@ def rabin_karp_rolling(pattern, string):
     sample = string[:pattern_len]
     sample_hash = hash_rolling(sample)
 
-    for i in range(pattern_len, string_len):
+    for i in xrange(pattern_len, string_len):
         if sample_hash == pattern_hash and sample == pattern:
             return i - pattern_len
 
@@ -132,7 +132,7 @@ def knuth_morris_pratt(pattern, string):
     pattern_len = len(pattern)  # cache
     string_len = len(string)
 
-    for i in range(string_len - pattern_len):
+    for i in xrange(string_len - pattern_len):
         for j, char in enumerate(pattern):
             if string[i + j] != char:
                 shift = table[j]
@@ -143,6 +143,52 @@ def knuth_morris_pratt(pattern, string):
                 return i
 
     return -1
+
+
+def make_bm_bad_char_table(pattern):
+    '''
+    >>> make_bm_bad_char_table('abcbca')
+    {'a': 5, 'c': 2, 'b': 2}
+    '''
+    pattern_len = len(pattern)
+    table = {}
+    # From last to second char
+    for i in xrange(pattern_len - 1, 0, -1):
+        # From current to first char
+        for j in xrange(i - 1, -1, -1):
+            char = pattern[i]
+            if char == pattern[j]:
+                table[char] = i - j
+                break
+    return table
+
+
+def boyer_moore(pattern, string):
+    '''
+    >>> test(boyer_moore)
+    True
+    '''
+    pattern_len = len(pattern)  # cache
+    string_len = len(string)
+    bad_char_table = make_bm_bad_char_table(pattern)
+
+    print pattern, string
+    i = pattern_len - 1
+    while i < string_len:
+        for j in xrange(pattern_len):
+            char = string[i - j]
+            print i, char, j, pattern[pattern_len - 1 - j]
+            if char != pattern[pattern_len - 1 - j]:
+                i += bad_char_table.get(char, pattern_len) - 1
+                break
+
+            elif j == pattern_len - 1:
+                return i
+
+        i += 1
+
+    return -1
+
 
 if __name__ == '__main__':
     import doctest
